@@ -1,3 +1,4 @@
+import * as path from "path";
 import * as ts from "typescript";
 import { NoRootTypeError } from "./Error/NoRootTypeError";
 import { Context, NodeParser } from "./NodeParser";
@@ -17,8 +18,8 @@ export class SchemaGenerator {
     ) {
     }
 
-    public createSchema(fullName: string): Schema {
-        const rootNode = this.findRootNode(fullName);
+    public createSchema(fullName: string, typeFileName?: string): Schema {
+        const rootNode = this.findRootNode(fullName, typeFileName);
         const rootType = this.nodeParser.createType(rootNode, new Context());
 
         return {
@@ -28,11 +29,13 @@ export class SchemaGenerator {
         };
     }
 
-    private findRootNode(fullName: string): ts.Node {
+    private findRootNode(fullName: string, typeFileName?: string): ts.Node {
         const typeChecker = this.program.getTypeChecker();
         const allTypes = new Map<string, ts.Node>();
 
-        this.program.getSourceFiles().forEach((sourceFile) => this.inspectNode(sourceFile, typeChecker, allTypes));
+        const sources = this.program.getSourceFiles()
+            .filter((sourceFile) => typeFileName ? this.isSameFile(sourceFile.fileName, typeFileName) : true)
+            .forEach((sourceFile) => this.inspectNode(sourceFile, typeChecker, allTypes));
 
         if (!allTypes.has(fullName)) {
             throw new NoRootTypeError(fullName);
@@ -40,6 +43,11 @@ export class SchemaGenerator {
 
         return allTypes.get(fullName)!;
     }
+
+    private isSameFile(fileNameA: string, fileNameB: string) {
+        return path.normalize(fileNameA) === path.normalize(fileNameB);
+    }
+
     private inspectNode(node: ts.Node, typeChecker: ts.TypeChecker, allTypes: Map<string, ts.Node>): void {
         if (
             node.kind === ts.SyntaxKind.InterfaceDeclaration ||

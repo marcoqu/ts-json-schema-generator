@@ -9,6 +9,7 @@ import { formatError } from "./src/Utils/formatError";
 const args = commander
     .option("-p, --path <path>", "Typescript path")
     .option("-t, --type <name>", "Type name")
+    .option("-f, --typeFile <typeFile>", "Name of the file containing the type")
     .option(
         "-e, --expose <expose>",
         "Type exposing",
@@ -42,7 +43,7 @@ const config: Config = {
 };
 
 try {
-    const schema = createGenerator(config).createSchema(args.type);
+    const schema = createGenerator(config).createSchema(args.type, args.typeFile);
     process.stdout.write(config.sortProps ?
         stringify(schema, {space: 2}) :
         JSON.stringify(schema, null, 2));
