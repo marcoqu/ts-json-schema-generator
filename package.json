@@ -61,7 +61,7 @@
   "scripts": {
     "prepublishOnly": "npm run build",
     "preversion": "npm run lint",
-    "build": "tsc",
+    "build": "node node_modules/typescript/bin/tsc",
     "watch": "tsc -w",
     "lint": "tslint -p .",
     "test": "jest test/ --verbose",
