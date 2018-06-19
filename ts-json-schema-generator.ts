@@ -32,7 +32,7 @@ const args = commander
     )
     .option(
         "-s, --strictTuples",
-        "Do not create allow additional items on tuples",
+        "Do not allow additional items on tuples",
     )
     .parse(process.argv);
 
