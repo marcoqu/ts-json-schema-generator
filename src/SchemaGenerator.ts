@@ -11,6 +11,8 @@ import { StringMap } from "./Utils/StringMap";
 import { localSymbolAtNode, symbolAtNode } from "./Utils/symbolAtNode";
 
 export class SchemaGenerator {
+    private allTypes: Map<string, ts.Node>;
+
     public constructor(
         private program: ts.Program,
         private nodeParser: NodeParser,
@@ -31,17 +33,22 @@ export class SchemaGenerator {
 
     private findRootNode(fullName: string, typeFileName?: string): ts.Node {
         const typeChecker = this.program.getTypeChecker();
-        const allTypes = new Map<string, ts.Node>();
 
-        const sources = this.program.getSourceFiles()
+        if (!this.allTypes) {
+            this.allTypes = new Map<string, ts.Node>();
+
+            this.program.getSourceFiles()
             .filter((sourceFile) => typeFileName ? this.isSameFile(sourceFile.fileName, typeFileName) : true)
-            .forEach((sourceFile) => this.inspectNode(sourceFile, typeChecker, allTypes));
+            .forEach(
+                (sourceFile) => this.inspectNode(sourceFile, typeChecker, this.allTypes),
+            );
+        }
 
-        if (!allTypes.has(fullName)) {
+        if (!this.allTypes.has(fullName)) {
             throw new NoRootTypeError(fullName);
         }
 
-        return allTypes.get(fullName)!;
+        return this.allTypes.get(fullName)!;
     }
 
     private isSameFile(fileNameA: string, fileNameB: string) {
