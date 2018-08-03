@@ -19,14 +19,16 @@ class SchemaGenerator {
     }
     findRootNode(fullName, typeFileName) {
         const typeChecker = this.program.getTypeChecker();
-        const allTypes = new Map();
-        const sources = this.program.getSourceFiles()
-            .filter((sourceFile) => typeFileName ? this.isSameFile(sourceFile.fileName, typeFileName) : true)
-            .forEach((sourceFile) => this.inspectNode(sourceFile, typeChecker, allTypes));
-        if (!allTypes.has(fullName)) {
+        if (!this.allTypes) {
+            this.allTypes = new Map();
+            this.program.getSourceFiles()
+                .filter((sourceFile) => typeFileName ? this.isSameFile(sourceFile.fileName, typeFileName) : true)
+                .forEach((sourceFile) => this.inspectNode(sourceFile, typeChecker, this.allTypes));
+        }
+        if (!this.allTypes.has(fullName)) {
             throw new NoRootTypeError_1.NoRootTypeError(fullName);
         }
-        return allTypes.get(fullName);
+        return this.allTypes.get(fullName);
     }
     isSameFile(fileNameA, fileNameB) {
         return path.normalize(fileNameA) === path.normalize(fileNameB);

@@ -40,19 +40,5 @@ describe("config", () => {
     assertSchema("jsdoc-description-only", { type: "MyObject", expose: "export", topRef: true, jsDoc: "extended" });
     assertSchema("jsdoc-hide", { type: "MyObject", expose: "export", topRef: true, jsDoc: "extended" });
     assertSchema("jsdoc-inheritance", { type: "MyObject", expose: "export", topRef: true, jsDoc: "extended" });
-    assertSchema("strict-tuples-true", {
-        type: "MyObject",
-        expose: "export",
-        topRef: true,
-        jsDoc: "none",
-        strictTuples: true,
-    });
-    assertSchema("strict-tuples-false", {
-        type: "MyObject",
-        expose: "export",
-        topRef: true,
-        jsDoc: "none",
-        strictTuples: false,
-    });
 });
 //# sourceMappingURL=config.test.js.map

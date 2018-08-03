@@ -62,11 +62,15 @@ describe("valid-data", () => {
     assertSchema("type-aliases-object", "MyAlias");
     assertSchema("type-aliases-mixed", "MyObject");
     assertSchema("type-aliases-union", "MyUnion");
-    assertSchema("type-aliases-tuple", "MyTuple");
     assertSchema("type-aliases-anonymous", "MyObject");
     assertSchema("type-aliases-local-namespace", "MyObject");
     assertSchema("type-aliases-recursive-anonymous", "MyAlias");
     assertSchema("type-aliases-recursive-export", "MyObject");
+    assertSchema("type-aliases-tuple", "MyTuple");
+    assertSchema("type-aliases-tuple-empty", "MyTuple");
+    assertSchema("type-aliases-tuple-optional-items", "MyTuple");
+    assertSchema("type-aliases-tuple-rest", "MyTuple");
+    assertSchema("type-aliases-tuple-only-rest", "MyTuple");
     assertSchema("type-maps", "MyObject");
     assertSchema("type-primitives", "MyObject");
     assertSchema("type-union", "TypeUnion");
@@ -86,6 +90,7 @@ describe("valid-data", () => {
     assertSchema("type-mapped-literal", "MyObject");
     assertSchema("type-mapped-generic", "MyObject");
     assertSchema("type-mapped-native", "MyObject");
+    assertSchema("type-mapped-widened", "MyObject");
     assertSchema("generic-simple", "MyObject");
     assertSchema("generic-arrays", "MyObject");
     assertSchema("generic-multiple", "MyObject");
@@ -93,6 +98,7 @@ describe("valid-data", () => {
     assertSchema("generic-anonymous", "MyObject");
     assertSchema("generic-recursive", "MyObject");
     assertSchema("generic-hell", "MyObject");
+    assertSchema("generic-default", "MyObject");
     assertSchema("nullable-null", "MyObject");
     assertSchema("undefined-alias", "MyType");
     assertSchema("undefined-union", "MyType");

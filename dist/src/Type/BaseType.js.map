@@ -1,1 +1,1 @@
-{"version":3,"file":"BaseType.js","sourceRoot":"D:/Marco/Dropbox (ISI Foundation)/2018 - Self/ts-json-schema-generator/src/","sources":["src/Type/BaseType.ts"],"names":[],"mappings":";;AAAA;CAEC;AAFD,4BAEC"}
+{"version":3,"file":"BaseType.js","sourceRoot":"src/","sources":["src/Type/BaseType.ts"],"names":[],"mappings":";;AAAA,MAAsB,QAAQ;CAE7B;AAFD,4BAEC"}
