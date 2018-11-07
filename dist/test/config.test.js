@@ -40,5 +40,12 @@ describe("config", () => {
     assertSchema("jsdoc-description-only", { type: "MyObject", expose: "export", topRef: true, jsDoc: "extended" });
     assertSchema("jsdoc-hide", { type: "MyObject", expose: "export", topRef: true, jsDoc: "extended" });
     assertSchema("jsdoc-inheritance", { type: "MyObject", expose: "export", topRef: true, jsDoc: "extended" });
+    assertSchema("jsdoc-complex-extended", {
+        type: "MyObject",
+        expose: "export",
+        topRef: true,
+        jsDoc: "extended",
+        skipTypeCheck: true,
+    });
 });
 //# sourceMappingURL=config.test.js.map
