@@ -1,6 +1,6 @@
 # ts-json-schema-generator
 
-[![Build Status](https://travis-ci.org/vega/ts-json-schema-generator.svg?branch=master)](https://travis-ci.org/vega/ts-json-schema-generator)
+[![Build Status](https://dev.azure.com/vega-vis/ts-json-schema-generator/_apis/build/status/vega.ts-json-schema-generator)](https://dev.azure.com/vega-vis/ts-json-schema-generator/_build/latest?definitionId=3)
 [![npm dependencies](https://david-dm.org/vega/ts-json-schema-generator.svg)](https://www.npmjs.com/package/ts-json-schema-generator)
 [![npm version](https://img.shields.io/npm/v/ts-json-schema-generator.svg)](https://www.npmjs.com/package/ts-json-schema-generator)
 
@@ -40,6 +40,12 @@ npm install --save ts-json-schema-generator
     basic: Read JsDoc annotations to provide schema properties.
     extended: Also read @nullable, and @asType annotations.
     none: Do not use JsDoc annotations.
+
+-c, --skip-type-check
+    Skip type checks for better performance.
+
+-s, --strict-tuples
+    Do not allow additional items on tuples.
 
 -u, --unstable
     Do not sort properties.
