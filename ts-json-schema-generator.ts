@@ -30,10 +30,6 @@ const args = commander
         "Do not sort properties",
     )
     .option(
-        "-s, --strict-tuples",
-        "Do not allow additional items on tuples",
-    )
-    .option(
         "-c, --no-type-check",
         "Skip type checks to improve performance",
     )
@@ -48,7 +44,6 @@ const config: Config = {
     jsDoc: args.jsDoc,
     sortProps: !args.unstable,
     typeFile: args.typeFile,
-    strictTuples: args.strictTuples,
     skipTypeCheck: !args.typeCheck,
 };
 

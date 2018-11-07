@@ -44,9 +44,6 @@ npm install --save ts-json-schema-generator
 -c, --skip-type-check
     Skip type checks for better performance.
 
--s, --strict-tuples
-    Do not allow additional items on tuples.
-
 -u, --unstable
     Do not sort properties.
 ```

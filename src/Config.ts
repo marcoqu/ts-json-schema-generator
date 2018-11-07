@@ -4,7 +4,6 @@ export interface PartialConfig {
     topRef: boolean;
     jsDoc: "none" | "extended" | "basic";
     sortProps?: boolean;
-    strictTuples?: boolean;
     skipTypeCheck?: boolean;
 }
 
@@ -19,6 +18,5 @@ export const DEFAULT_CONFIG: PartialConfig = {
     topRef: true,
     jsDoc: "extended",
     sortProps: true,
-    strictTuples: false,
     skipTypeCheck: false,
 };
