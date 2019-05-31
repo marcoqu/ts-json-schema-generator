@@ -10,17 +10,15 @@ pool:
 strategy:
   maxParallel: 3  # hack
   matrix:
-    node6:
-      node_version: 6.x
-    node8:
-      node_version: 8.x
     node10:
       node_version: 10.x
+    node11:
+      node_version: 11.x
 
 trigger:
   branches:
     include:
-      - refs/heads/master
+      - refs/heads/*
       - refs/tags/*
 
 steps:
@@ -50,7 +48,7 @@ steps:
     testResultsFiles: './test_results.xml'
     testRunTitle: 'Node $(node_version) tests'
   displayName: 'Publish Test Results'
-  condition: eq(variables['node_version'], '10.x')
+  condition: eq(variables['node_version'], '11.x')
 
 - task: PublishCodeCoverageResults@1
   inputs:
@@ -58,10 +56,10 @@ steps:
     codeCoverageTool: Cobertura
     reportDirectory: '$(System.DefaultWorkingDirectory)/coverage'
   displayName: 'Publish Test Coverage'
-  condition: eq(variables['node_version'], '10.x')
+  condition: eq(variables['node_version'], '11.x')
 
 - task: Npm@1
-  condition: and(succeeded(), eq(variables['node_version'], '10.x'), contains(variables['Build.SourceBranch'], 'refs/tags/'))
+  condition: and(succeeded(), eq(variables['node_version'], '11.x'), contains(variables['Build.SourceBranch'], 'refs/tags/'))
   inputs:
     command: publish
     publishEndpoint: 'npmjs'

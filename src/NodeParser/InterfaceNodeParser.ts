@@ -4,6 +4,7 @@ import { SubNodeParser } from "../SubNodeParser";
 import { BaseType } from "../Type/BaseType";
 import { ObjectProperty, ObjectType } from "../Type/ObjectType";
 import { isHidden } from "../Utils/isHidden";
+import { getKey } from "../Utils/nodeKey";
 
 export class InterfaceNodeParser implements SubNodeParser {
     public constructor(
@@ -49,8 +50,8 @@ export class InterfaceNodeParser implements SubNodeParser {
 
     private getProperties(node: ts.InterfaceDeclaration, context: Context): ObjectProperty[] {
         return node.members
-            .filter((property) => property.kind === ts.SyntaxKind.PropertySignature)
-            .reduce((result: ObjectProperty[], propertyNode: ts.PropertySignature) => {
+            .filter(ts.isPropertySignature)
+            .reduce((result: ObjectProperty[], propertyNode) => {
                 const propertySymbol: ts.Symbol = (propertyNode as any).symbol;
                 if (isHidden(propertySymbol)) {
                     return result;
@@ -66,19 +67,15 @@ export class InterfaceNodeParser implements SubNodeParser {
             }, []);
     }
     private getAdditionalProperties(node: ts.InterfaceDeclaration, context: Context): BaseType | false {
-        const property = node.members.find((it) => it.kind === ts.SyntaxKind.IndexSignature);
-        if (!property) {
+        const indexSignature = node.members.find(ts.isIndexSignatureDeclaration);
+        if (!indexSignature) {
             return false;
         }
 
-        const signature = property as ts.IndexSignatureDeclaration;
-        return this.childNodeParser.createType(signature.type!, context);
+        return this.childNodeParser.createType(indexSignature.type!, context);
     }
 
     private getTypeId(node: ts.Node, context: Context): string {
-        const fullName = `interface-${node.getFullStart()}`;
-        const argumentIds = context.getArguments().map((arg) => arg.getId());
-
-        return argumentIds.length ? `${fullName}<${argumentIds.join(",")}>` : fullName;
+        return `interface-${getKey(node, context)}`;
     }
 }

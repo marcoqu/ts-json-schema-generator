@@ -52,9 +52,11 @@ export function createParser(program: ts.Program, config: Config): NodeParser {
     }
     function withJsDoc(nodeParser: SubNodeParser): SubNodeParser {
         if (config.jsDoc === "extended") {
-            return new AnnotatedNodeParser(nodeParser, new ExtendedAnnotationsReader(typeChecker));
+            return new AnnotatedNodeParser(nodeParser,
+                new ExtendedAnnotationsReader(typeChecker, config.extraJsonTags));
         } else if (config.jsDoc === "basic") {
-            return new AnnotatedNodeParser(nodeParser, new BasicAnnotationsReader());
+            return new AnnotatedNodeParser(nodeParser,
+                new BasicAnnotationsReader(config.extraJsonTags));
         } else {
             return nodeParser;
         }
@@ -76,16 +78,16 @@ export function createParser(program: ts.Program, config: Config): NodeParser {
         .addNodeParser(new BooleanLiteralNodeParser())
         .addNodeParser(new NullLiteralNodeParser())
 
-        .addNodeParser(new LiteralNodeParser(typeChecker, chainNodeParser))
-        .addNodeParser(new ParenthesizedNodeParser(typeChecker, chainNodeParser))
+        .addNodeParser(new LiteralNodeParser(chainNodeParser))
+        .addNodeParser(new ParenthesizedNodeParser(chainNodeParser))
 
         .addNodeParser(new TypeReferenceNodeParser(typeChecker, chainNodeParser))
         .addNodeParser(new ExpressionWithTypeArgumentsNodeParser(typeChecker, chainNodeParser))
 
-        .addNodeParser(new IndexedAccessTypeNodeParser(typeChecker, chainNodeParser))
+        .addNodeParser(new IndexedAccessTypeNodeParser(chainNodeParser))
         .addNodeParser(new TypeofNodeParser(typeChecker, chainNodeParser))
-        .addNodeParser(new MappedTypeNodeParser(typeChecker, chainNodeParser))
-        .addNodeParser(new TypeOperatorNodeParser(typeChecker, chainNodeParser))
+        .addNodeParser(new MappedTypeNodeParser(chainNodeParser))
+        .addNodeParser(new TypeOperatorNodeParser(chainNodeParser))
 
         .addNodeParser(new UnionNodeParser(typeChecker, chainNodeParser))
         .addNodeParser(new IntersectionNodeParser(typeChecker, chainNodeParser))

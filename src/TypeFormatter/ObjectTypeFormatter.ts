@@ -19,11 +19,12 @@ export class ObjectTypeFormatter implements SubTypeFormatter {
         return type instanceof ObjectType;
     }
     public getDefinition(type: ObjectType): Definition {
-        if (type.getBaseTypes().length === 0) {
+        const types = type.getBaseTypes();
+        if (types.length === 0) {
             return this.getObjectDefinition(type);
         }
 
-        return type.getBaseTypes().reduce(
+        return types.reduce(
             getAllOfDefinitionReducer(this.childTypeFormatter), this.getObjectDefinition(type));
     }
     public getChildren(type: ObjectType): BaseType[] {
@@ -49,7 +50,7 @@ export class ObjectTypeFormatter implements SubTypeFormatter {
 
     private getObjectDefinition(type: ObjectType): Definition {
         const objectProperties: ObjectProperty[] = type.getProperties();
-        const additionalProperties: BaseType|boolean = type.getAdditionalProperties();
+        const additionalProperties: BaseType | boolean = type.getAdditionalProperties();
 
         const required = objectProperties
             .map((property) => this.prepareObjectProperty(property))
@@ -71,15 +72,6 @@ export class ObjectTypeFormatter implements SubTypeFormatter {
                     this.childTypeFormatter.getDefinition(additionalProperties) :
                     additionalProperties}),
         };
-    }
-    private getAdditionalProperties(additionalProperties: BaseType | boolean): Definition {
-        if (typeof additionalProperties === "boolean") {
-            return additionalProperties ? {} : {additionalProperties: false};
-        }
-
-        return additionalProperties instanceof AnyType
-            ? {}
-            : {additionalProperties: this.childTypeFormatter.getDefinition(additionalProperties)};
     }
 
     private prepareObjectProperty(property: ObjectProperty): ObjectProperty {

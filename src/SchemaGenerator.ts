@@ -12,12 +12,26 @@ import { localSymbolAtNode, symbolAtNode } from "./Utils/symbolAtNode";
 
 export class SchemaGenerator {
     private allTypes: Map<string, ts.Node>;
+    private prioritizedFiles: ts.SourceFile[];
+    private unprioritizedFiles: ts.SourceFile[];
 
     public constructor(
         private program: ts.Program,
         private nodeParser: NodeParser,
         private typeFormatter: TypeFormatter,
     ) {
+        this.allTypes = new Map<string, ts.Node>();
+
+        const sourceFiles = this.program.getSourceFiles();
+        this.prioritizedFiles = [];
+        this.unprioritizedFiles = [];
+        for (const f of sourceFiles) {
+            if (!f.fileName.includes("/node_modules/")) {
+                this.prioritizedFiles.push(f);
+            } else {
+                this.unprioritizedFiles.push(f);
+            }
+        }
     }
 
     public createSchema(fullName: string, typeFileName?: string): Schema {
@@ -34,21 +48,32 @@ export class SchemaGenerator {
     private findRootNode(fullName: string, typeFileName?: string): ts.Node {
         const typeChecker = this.program.getTypeChecker();
 
-        if (!this.allTypes) {
-            this.allTypes = new Map<string, ts.Node>();
-
-            this.program.getSourceFiles()
-            .filter((sourceFile) => typeFileName ? this.isSameFile(sourceFile.fileName, typeFileName) : true)
-            .forEach(
-                (sourceFile) => this.inspectNode(sourceFile, typeChecker, this.allTypes),
-            );
+        if (this.prioritizedFiles.length) {
+            const files = this.prioritizedFiles.filter((sourceFile) => {
+                typeFileName ? this.isSameFile(sourceFile.fileName, typeFileName) : true
+            })
+            for (const sourceFile of files) {
+                this.inspectNode(sourceFile, typeChecker, this.allTypes);
+            }
+            this.prioritizedFiles = [];
         }
 
-        if (!this.allTypes.has(fullName)) {
-            throw new NoRootTypeError(fullName);
+        if (this.allTypes.has(fullName)) {
+            return this.allTypes.get(fullName)!;
         }
 
-        return this.allTypes.get(fullName)!;
+        if (this.unprioritizedFiles.length) {
+            for (const sourceFile of this.unprioritizedFiles) {
+                this.inspectNode(sourceFile, typeChecker, this.allTypes);
+            }
+            this.unprioritizedFiles = [];
+        }
+
+        if (this.allTypes.has(fullName)) {
+            return this.allTypes.get(fullName)!;
+        }
+
+        throw new NoRootTypeError(fullName);
     }
 
     private isSameFile(fileNameA: string, fileNameB: string) {
@@ -92,11 +117,29 @@ export class SchemaGenerator {
         return this.typeFormatter.getDefinition(rootType);
     }
     private getRootChildDefinitions(rootType: BaseType): StringMap<Definition> {
-        return this.typeFormatter.getChildren(rootType)
+        const seen = new Set<string>();
+
+        const children = this
+            .typeFormatter.getChildren(rootType)
             .filter((child) => child instanceof DefinitionType)
-            .reduce((result: StringMap<Definition>, child: DefinitionType) => ({
-                ...result,
-                [child.getId()]: this.typeFormatter.getDefinition(child.getType()),
-            }), {});
+            .filter((child: DefinitionType) => {
+                if (!seen.has(child.getId())) {
+                    seen.add(child.getId());
+                    return true;
+                }
+                return false;
+            }) as DefinitionType[];
+
+        return children
+            .reduce((result: StringMap<Definition>, child) => {
+                const name = child.getName();
+                if (name in result) {
+                    throw new Error(`Type "${name}" has multiple definitions.`);
+                }
+                return {
+                    ...result,
+                    [name]: this.typeFormatter.getDefinition(child.getType()),
+                };
+            }, {});
     }
 }

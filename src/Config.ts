@@ -5,6 +5,7 @@ export interface PartialConfig {
     jsDoc: "none" | "extended" | "basic";
     sortProps?: boolean;
     skipTypeCheck?: boolean;
+    extraJsonTags?: string[];
 }
 
 export interface Config extends PartialConfig {
@@ -19,4 +20,5 @@ export const DEFAULT_CONFIG: PartialConfig = {
     jsDoc: "extended",
     sortProps: true,
     skipTypeCheck: false,
+    extraJsonTags: [],
 };

@@ -33,6 +33,12 @@ const args = commander
         "-c, --no-type-check",
         "Skip type checks to improve performance",
     )
+    .option(
+        "-k, --validationKeywords [value]",
+        "Provide additional validation keywords to include",
+        (value: string, list: string[]) => list.concat(value), [],
+    )
+
     .parse(process.argv);
 
 const config: Config = {
@@ -45,6 +51,7 @@ const config: Config = {
     sortProps: !args.unstable,
     typeFile: args.typeFile,
     skipTypeCheck: !args.typeCheck,
+    extraJsonTags: args.validationKeywords,
 };
 
 try {
