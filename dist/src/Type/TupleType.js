@@ -7,7 +7,7 @@ class TupleType extends BaseType_1.BaseType {
         this.types = types;
     }
     getId() {
-        return "[" + this.types.map((item) => item.getId()).join(",") + "]";
+        return "[" + this.types.map(item => item.getId()).join(",") + "]";
     }
     getTypes() {
         return this.types;

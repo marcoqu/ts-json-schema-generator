@@ -12,8 +12,8 @@ class ExposeNodeParser {
     supportsNode(node) {
         return this.subNodeParser.supportsNode(node);
     }
-    createType(node, context) {
-        const baseType = this.subNodeParser.createType(node, context);
+    createType(node, context, reference) {
+        const baseType = this.subNodeParser.createType(node, context, reference);
         if (!this.isExportNode(node)) {
             return baseType;
         }
@@ -32,7 +32,7 @@ class ExposeNodeParser {
     getDefinitionName(node, context) {
         const symbol = symbolAtNode_1.symbolAtNode(node);
         const fullName = this.typeChecker.getFullyQualifiedName(symbol).replace(/^".*"\./, "");
-        const argumentIds = context.getArguments().map((arg) => arg.getId());
+        const argumentIds = context.getArguments().map(arg => arg.getName());
         return argumentIds.length ? `${fullName}<${argumentIds.join(",")}>` : fullName;
     }
 }

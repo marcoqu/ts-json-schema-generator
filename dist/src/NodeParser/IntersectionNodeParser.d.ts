@@ -8,4 +8,5 @@ export declare class IntersectionNodeParser implements SubNodeParser {
     constructor(typeChecker: ts.TypeChecker, childNodeParser: NodeParser);
     supportsNode(node: ts.IntersectionTypeNode): boolean;
     createType(node: ts.IntersectionTypeNode, context: Context): BaseType;
+    private translate;
 }

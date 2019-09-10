@@ -4,16 +4,8 @@ const ts = require("typescript");
 const BaseError_1 = require("./BaseError");
 class DiagnosticError extends BaseError_1.BaseError {
     constructor(diagnostics) {
-        super();
+        super(diagnostics.map(diagnostic => ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n")).join("\n\n"));
         this.diagnostics = diagnostics;
-    }
-    get name() {
-        return "DiagnosticError";
-    }
-    get message() {
-        return this.diagnostics
-            .map((diagnostic) => ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n"))
-            .join("\n\n");
     }
     getDiagnostics() {
         return this.diagnostics;

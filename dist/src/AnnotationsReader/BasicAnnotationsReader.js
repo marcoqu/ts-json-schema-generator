@@ -2,6 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const symbolAtNode_1 = require("../Utils/symbolAtNode");
 class BasicAnnotationsReader {
+    constructor(extraJsonTags) {
+        this.extraJsonTags = extraJsonTags;
+    }
     getAnnotations(node) {
         const symbol = symbolAtNode_1.symbolAtNode(node);
         if (!symbol) {
@@ -30,6 +33,9 @@ class BasicAnnotationsReader {
         else if (BasicAnnotationsReader.jsonTags.indexOf(jsDocTag.name) >= 0) {
             return this.parseJson(jsDocTag.text);
         }
+        else if (this.extraJsonTags && this.extraJsonTags.indexOf(jsDocTag.name) >= 0) {
+            return this.parseJson(jsDocTag.text);
+        }
         else {
             return undefined;
         }
@@ -43,11 +49,15 @@ class BasicAnnotationsReader {
         }
     }
 }
+exports.BasicAnnotationsReader = BasicAnnotationsReader;
 BasicAnnotationsReader.textTags = [
     "title",
     "description",
     "format",
     "pattern",
+    "$comment",
+    "contentMediaType",
+    "contentEncoding",
 ];
 BasicAnnotationsReader.jsonTags = [
     "minimum",
@@ -57,6 +67,8 @@ BasicAnnotationsReader.jsonTags = [
     "multipleOf",
     "minLength",
     "maxLength",
+    "minProperties",
+    "maxProperties",
     "minItems",
     "maxItems",
     "uniqueItems",
@@ -65,6 +77,10 @@ BasicAnnotationsReader.jsonTags = [
     "const",
     "examples",
     "default",
+    "if",
+    "then",
+    "else",
+    "readOnly",
+    "writeOnly",
 ];
-exports.BasicAnnotationsReader = BasicAnnotationsReader;
 //# sourceMappingURL=BasicAnnotationsReader.js.map

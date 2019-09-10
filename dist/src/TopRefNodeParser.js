@@ -12,7 +12,7 @@ class TopRefNodeParser {
         if (this.topRef && !(baseType instanceof DefinitionType_1.DefinitionType)) {
             return new DefinitionType_1.DefinitionType(this.fullName, baseType);
         }
-        else if (!this.topRef && (baseType instanceof DefinitionType_1.DefinitionType)) {
+        else if (!this.topRef && baseType instanceof DefinitionType_1.DefinitionType) {
             return baseType.getType();
         }
         else {

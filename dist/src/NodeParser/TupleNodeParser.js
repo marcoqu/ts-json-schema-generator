@@ -14,8 +14,8 @@ class TupleNodeParser {
     createType(node, context) {
         const hidden = isHidden_1.referenceHidden(this.typeChecker);
         return new TupleType_1.TupleType(node.elementTypes
-            .filter((item) => !hidden(item))
-            .map((item) => {
+            .filter(item => !hidden(item))
+            .map(item => {
             return this.childNodeParser.createType(item, context);
         }));
     }

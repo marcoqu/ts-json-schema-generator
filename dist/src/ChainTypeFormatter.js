@@ -10,7 +10,7 @@ class ChainTypeFormatter {
         return this;
     }
     supportsType(type) {
-        return this.typeFormatters.some((typeFormatter) => typeFormatter.supportsType(type));
+        return this.typeFormatters.some(typeFormatter => typeFormatter.supportsType(type));
     }
     getDefinition(type) {
         return this.getTypeFormatter(type).getDefinition(type);

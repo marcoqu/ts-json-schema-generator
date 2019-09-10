@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const ts = require("typescript");
 const ObjectType_1 = require("../Type/ObjectType");
 const isHidden_1 = require("../Utils/isHidden");
+const nodeKey_1 = require("../Utils/nodeKey");
 class TypeLiteralNodeParser {
     constructor(childNodeParser) {
         this.childNodeParser = childNodeParser;
@@ -10,13 +11,16 @@ class TypeLiteralNodeParser {
     supportsNode(node) {
         return node.kind === ts.SyntaxKind.TypeLiteral;
     }
-    createType(node, context) {
-        return new ObjectType_1.ObjectType(this.getTypeId(node, context), [], this.getProperties(node, context), this.getAdditionalProperties(node, context));
+    createType(node, context, reference) {
+        const id = this.getTypeId(node, context);
+        if (reference) {
+            reference.setId(id);
+            reference.setName(id);
+        }
+        return new ObjectType_1.ObjectType(id, [], this.getProperties(node, context), this.getAdditionalProperties(node, context));
     }
     getProperties(node, context) {
-        return node.members
-            .filter((property) => property.kind === ts.SyntaxKind.PropertySignature)
-            .reduce((result, propertyNode) => {
+        return node.members.filter(ts.isPropertySignature).reduce((result, propertyNode) => {
             const propertySymbol = propertyNode.symbol;
             if (isHidden_1.isHidden(propertySymbol)) {
                 return result;
@@ -27,17 +31,14 @@ class TypeLiteralNodeParser {
         }, []);
     }
     getAdditionalProperties(node, context) {
-        const property = node.members.find((it) => it.kind === ts.SyntaxKind.IndexSignature);
-        if (!property) {
+        const indexSignature = node.members.find(ts.isIndexSignatureDeclaration);
+        if (!indexSignature) {
             return false;
         }
-        const signature = property;
-        return this.childNodeParser.createType(signature.type, context);
+        return this.childNodeParser.createType(indexSignature.type, context);
     }
     getTypeId(node, context) {
-        const fullName = `structure-${node.getFullStart()}`;
-        const argumentIds = context.getArguments().map((arg) => arg.getId());
-        return argumentIds.length ? `${fullName}<${argumentIds.join(",")}>` : fullName;
+        return `structure-${nodeKey_1.getKey(node, context)}`;
     }
 }
 exports.TypeLiteralNodeParser = TypeLiteralNodeParser;

@@ -3,15 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const BaseError_1 = require("./BaseError");
 class UnknownNodeError extends BaseError_1.BaseError {
     constructor(node, reference) {
-        super();
+        super(`Unknown node "${node.getFullText()}`);
         this.node = node;
         this.reference = reference;
-    }
-    get name() {
-        return "UnknownNodeError";
-    }
-    get message() {
-        return `Unknown node "${this.node.getFullText()}`;
     }
     getNode() {
         return this.node;

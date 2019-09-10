@@ -11,12 +11,16 @@ class AnnotatedNodeParser {
     supportsNode(node) {
         return this.childNodeParser.supportsNode(node);
     }
-    createType(node, context) {
-        const baseType = this.childNodeParser.createType(node, context);
+    createType(node, context, reference) {
+        const baseType = this.childNodeParser.createType(node, context, reference);
+        if (node.getSourceFile().fileName.match(/[/\\]typescript[/\\]lib[/\\]lib\.[^/\\]+\.d\.ts$/i)) {
+            return baseType;
+        }
         const annotatedNode = this.getAnnotatedNode(node);
         const annotations = this.annotationsReader.getAnnotations(annotatedNode);
-        const nullable = this.annotationsReader instanceof ExtendedAnnotationsReader_1.ExtendedAnnotationsReader ?
-            this.annotationsReader.isNullable(annotatedNode) : false;
+        const nullable = this.annotationsReader instanceof ExtendedAnnotationsReader_1.ExtendedAnnotationsReader
+            ? this.annotationsReader.isNullable(annotatedNode)
+            : false;
         return !annotations && !nullable ? baseType : new AnnotatedType_1.AnnotatedType(baseType, annotations || {}, nullable);
     }
     getAnnotatedNode(node) {
@@ -26,7 +30,13 @@ class AnnotatedNodeParser {
         else if (node.parent.kind === ts.SyntaxKind.PropertySignature) {
             return node.parent;
         }
+        else if (node.parent.kind === ts.SyntaxKind.PropertyDeclaration) {
+            return node.parent;
+        }
         else if (node.parent.kind === ts.SyntaxKind.IndexSignature) {
+            return node.parent;
+        }
+        else if (node.parent.kind === ts.SyntaxKind.Parameter) {
             return node.parent;
         }
         else {

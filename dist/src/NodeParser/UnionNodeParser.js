@@ -14,8 +14,8 @@ class UnionNodeParser {
     createType(node, context) {
         const hidden = isHidden_1.referenceHidden(this.typeChecker);
         return new UnionType_1.UnionType(node.types
-            .filter((subnode) => !hidden(subnode))
-            .map((subnode) => {
+            .filter(subnode => !hidden(subnode))
+            .map(subnode => {
             return this.childNodeParser.createType(subnode, context);
         }));
     }

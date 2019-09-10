@@ -34,7 +34,7 @@ class TypeReferenceNodeParser {
     createSubContext(node, parentContext) {
         const subContext = new NodeParser_1.Context(node);
         if (node.typeArguments && node.typeArguments.length) {
-            node.typeArguments.forEach((typeArg) => {
+            node.typeArguments.forEach(typeArg => {
                 subContext.pushArgument(this.childNodeParser.createType(typeArg, parentContext));
             });
         }

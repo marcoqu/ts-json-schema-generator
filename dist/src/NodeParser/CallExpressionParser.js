@@ -14,7 +14,9 @@ class CallExpressionParser {
     }
     createType(node, context) {
         const type = this.typeChecker.getTypeAtLocation(node);
-        return new TupleType_1.TupleType([new UnionType_1.UnionType(type.typeArguments[0].types.map((t) => new LiteralType_1.LiteralType(t.value)))]);
+        return new TupleType_1.TupleType([
+            new UnionType_1.UnionType(type.typeArguments[0].types.map((t) => new LiteralType_1.LiteralType(t.value))),
+        ]);
     }
 }
 exports.CallExpressionParser = CallExpressionParser;

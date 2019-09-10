@@ -1,11 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const ts = require("typescript");
+const ArrayType_1 = require("../Type/ArrayType");
+const NumberType_1 = require("../Type/NumberType");
+const ObjectType_1 = require("../Type/ObjectType");
+const StringType_1 = require("../Type/StringType");
 const UnionType_1 = require("../Type/UnionType");
+const derefType_1 = require("../Utils/derefType");
 const typeKeys_1 = require("../Utils/typeKeys");
 class TypeOperatorNodeParser {
-    constructor(typeChecker, childNodeParser) {
-        this.typeChecker = typeChecker;
+    constructor(childNodeParser) {
         this.childNodeParser = childNodeParser;
     }
     supportsNode(node) {
@@ -13,7 +17,14 @@ class TypeOperatorNodeParser {
     }
     createType(node, context) {
         const type = this.childNodeParser.createType(node.type, context);
+        const derefed = derefType_1.derefType(type);
+        if (derefed instanceof ArrayType_1.ArrayType) {
+            return new NumberType_1.NumberType();
+        }
         const keys = typeKeys_1.getTypeKeys(type);
+        if (derefed instanceof ObjectType_1.ObjectType && derefed.getAdditionalProperties()) {
+            return new UnionType_1.UnionType([...keys, new StringType_1.StringType()]);
+        }
         return new UnionType_1.UnionType(keys);
     }
 }

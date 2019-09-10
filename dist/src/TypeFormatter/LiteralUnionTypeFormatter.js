@@ -3,10 +3,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const LiteralType_1 = require("../Type/LiteralType");
 const NullType_1 = require("../Type/NullType");
 const UnionType_1 = require("../Type/UnionType");
+const typeName_1 = require("../Utils/typeName");
 const uniqueArray_1 = require("../Utils/uniqueArray");
 class LiteralUnionTypeFormatter {
     supportsType(type) {
-        return type instanceof UnionType_1.UnionType && this.isLiteralUnion(type);
+        return type instanceof UnionType_1.UnionType && type.getTypes().length > 0 && this.isLiteralUnion(type);
     }
     getDefinition(type) {
         const values = uniqueArray_1.uniqueArray(type.getTypes().map((item) => this.getLiteralValue(item)));
@@ -28,13 +29,13 @@ class LiteralUnionTypeFormatter {
         return [];
     }
     isLiteralUnion(type) {
-        return type.getTypes().every((item) => item instanceof LiteralType_1.LiteralType || item instanceof NullType_1.NullType);
+        return type.getTypes().every(item => item instanceof LiteralType_1.LiteralType || item instanceof NullType_1.NullType);
     }
     getLiteralValue(value) {
         return value instanceof LiteralType_1.LiteralType ? value.getValue() : null;
     }
     getLiteralType(value) {
-        return value instanceof LiteralType_1.LiteralType ? typeof value.getValue() : "null";
+        return value instanceof LiteralType_1.LiteralType ? typeName_1.typeName(value.getValue()) : "null";
     }
 }
 exports.LiteralUnionTypeFormatter = LiteralUnionTypeFormatter;

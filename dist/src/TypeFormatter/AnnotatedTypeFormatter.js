@@ -29,9 +29,8 @@ function makeNullable(def) {
                 }
             }
         }
-        for (const k in def) {
-            if (def.hasOwnProperty(k) && k !== "description" && k !== "title" && k !== "default") {
-                const key = k;
+        for (const key of Object.keys(def)) {
+            if (key !== "description" && key !== "title" && key !== "default") {
                 subdef[key] = def[key];
                 delete def[key];
             }
@@ -49,7 +48,7 @@ class AnnotatedTypeFormatter {
         return type instanceof AnnotatedType_1.AnnotatedType;
     }
     getDefinition(type) {
-        const def = Object.assign({}, this.childTypeFormatter.getDefinition(type.getType()), type.getAnnotations());
+        const def = Object.assign(Object.assign({}, this.childTypeFormatter.getDefinition(type.getType())), type.getAnnotations());
         if (type.isNullable()) {
             return makeNullable(def);
         }

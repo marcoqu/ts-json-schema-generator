@@ -8,7 +8,10 @@ class DefinitionType extends BaseType_1.BaseType {
         this.type = type;
     }
     getId() {
-        return this.name;
+        return "def-" + this.type.getId();
+    }
+    getName() {
+        return this.name || super.getName();
     }
     getType() {
         return this.type;

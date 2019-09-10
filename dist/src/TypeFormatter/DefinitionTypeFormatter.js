@@ -9,13 +9,10 @@ class DefinitionTypeFormatter {
         return type instanceof DefinitionType_1.DefinitionType;
     }
     getDefinition(type) {
-        return { $ref: "#/definitions/" + type.getId() };
+        return { $ref: "#/definitions/" + type.getName() };
     }
     getChildren(type) {
-        return [
-            type,
-            ...this.childTypeFormatter.getChildren(type.getType()),
-        ];
+        return [type, ...this.childTypeFormatter.getChildren(type.getType())];
     }
 }
 exports.DefinitionTypeFormatter = DefinitionTypeFormatter;

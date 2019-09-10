@@ -6,5 +6,6 @@ exports.DEFAULT_CONFIG = {
     jsDoc: "extended",
     sortProps: true,
     skipTypeCheck: false,
+    extraJsonTags: [],
 };
 //# sourceMappingURL=Config.js.map

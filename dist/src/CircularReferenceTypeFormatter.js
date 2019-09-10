@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const uniqueArray_1 = require("./Utils/uniqueArray");
 class CircularReferenceTypeFormatter {
     constructor(childTypeFormatter) {
         this.childTypeFormatter = childTypeFormatter;
@@ -24,7 +25,7 @@ class CircularReferenceTypeFormatter {
         }
         const children = [];
         this.children.set(type, children);
-        children.push(...this.childTypeFormatter.getChildren(type));
+        children.push(...uniqueArray_1.uniqueArray(this.childTypeFormatter.getChildren(type)));
         return children;
     }
 }

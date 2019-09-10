@@ -5,6 +5,6 @@ export declare class TopRefNodeParser implements NodeParser {
     private childNodeParser;
     private fullName;
     private topRef;
-    constructor(childNodeParser: NodeParser, fullName: string, topRef: boolean);
+    constructor(childNodeParser: NodeParser, fullName: string | undefined, topRef: boolean);
     createType(node: ts.Node, context: Context): BaseType;
 }

@@ -4,18 +4,8 @@ const path = require("path");
 const ts = require("typescript");
 const DiagnosticError_1 = require("../Error/DiagnosticError");
 const UnknownNodeError_1 = require("../Error/UnknownNodeError");
-function getSourceFile(node) {
-    let sourceFile = node.parent;
-    while (sourceFile) {
-        if (sourceFile.kind === ts.SyntaxKind.SourceFile) {
-            return sourceFile;
-        }
-        sourceFile = sourceFile.parent;
-    }
-    return undefined;
-}
 function getNodeLocation(node) {
-    const sourceFile = getSourceFile(node);
+    const sourceFile = node.getSourceFile();
     if (!sourceFile) {
         return ["<unknown file>", 0, 0];
     }
@@ -33,10 +23,14 @@ function formatError(error) {
     }
     else if (error instanceof UnknownNodeError_1.UnknownNodeError) {
         const unknownNode = error.getReference() || error.getNode();
-        const nodeFullText = unknownNode.getFullText().trim().split("\n")[0].trim();
+        const nodeFullText = unknownNode
+            .getFullText()
+            .trim()
+            .split("\n")[0]
+            .trim();
         const [sourceFile, lineNumber, charPos] = getNodeLocation(unknownNode);
-        return `${error.name}: Unknown node "${nodeFullText}" (ts.SyntaxKind = ${error.getNode().kind}) ` +
-            `at ${sourceFile}(${lineNumber},${charPos})\n`;
+        return (`${error.name}: Unknown node "${nodeFullText}" (ts.SyntaxKind = ${error.getNode().kind}) ` +
+            `at ${sourceFile}(${lineNumber},${charPos})\n`);
     }
     return `${error.name}: ${error.message}\n`;
 }

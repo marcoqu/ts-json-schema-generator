@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const BaseType_1 = require("./BaseType");
+const String_1 = require("../Utils/String");
 class ObjectProperty {
     constructor(name, type, required) {
         this.name = name;
@@ -8,7 +9,7 @@ class ObjectProperty {
         this.required = required;
     }
     getName() {
-        return this.name;
+        return String_1.strip(this.name);
     }
     getType() {
         return this.type;

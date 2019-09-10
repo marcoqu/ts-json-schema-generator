@@ -10,13 +10,13 @@ class ReferenceTypeFormatter {
         return type instanceof ReferenceType_1.ReferenceType;
     }
     getDefinition(type) {
-        return { $ref: "#/definitions/" + type.getId() };
+        return { $ref: "#/definitions/" + type.getName() };
     }
     getChildren(type) {
         if (type.getType() instanceof DefinitionType_1.DefinitionType) {
             return [];
         }
-        return this.childTypeFormatter.getChildren(new DefinitionType_1.DefinitionType(type.getId(), type.getType()));
+        return this.childTypeFormatter.getChildren(new DefinitionType_1.DefinitionType(type.getName(), type.getType()));
     }
 }
 exports.ReferenceTypeFormatter = ReferenceTypeFormatter;

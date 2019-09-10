@@ -3,12 +3,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const symbolAtNode_1 = require("../Utils/symbolAtNode");
 const BasicAnnotationsReader_1 = require("./BasicAnnotationsReader");
 class ExtendedAnnotationsReader extends BasicAnnotationsReader_1.BasicAnnotationsReader {
-    constructor(typeChecker) {
-        super();
+    constructor(typeChecker, extraJsonTags) {
+        super(extraJsonTags);
         this.typeChecker = typeChecker;
     }
     getAnnotations(node) {
-        const annotations = Object.assign({}, this.getDescriptionAnnotation(node), this.getTypeAnnotation(node), super.getAnnotations(node));
+        const annotations = Object.assign(Object.assign(Object.assign({}, this.getDescriptionAnnotation(node)), this.getTypeAnnotation(node)), super.getAnnotations(node));
         return Object.keys(annotations).length ? annotations : undefined;
     }
     isNullable(node) {
@@ -32,7 +32,7 @@ class ExtendedAnnotationsReader extends BasicAnnotationsReader_1.BasicAnnotation
         if (!comments || !comments.length) {
             return undefined;
         }
-        return { description: comments.map((comment) => comment.text).join(" ") };
+        return { description: comments.map(comment => comment.text).join(" ") };
     }
     getTypeAnnotation(node) {
         const symbol = symbolAtNode_1.symbolAtNode(node);
@@ -43,7 +43,7 @@ class ExtendedAnnotationsReader extends BasicAnnotationsReader_1.BasicAnnotation
         if (!jsDocTags || !jsDocTags.length) {
             return undefined;
         }
-        const jsDocTag = jsDocTags.find((tag) => tag.name === "asType");
+        const jsDocTag = jsDocTags.find(tag => tag.name === "asType");
         if (!jsDocTag || !jsDocTag.text) {
             return undefined;
         }

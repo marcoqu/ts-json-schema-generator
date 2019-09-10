@@ -7,7 +7,7 @@ class IntersectionType extends BaseType_1.BaseType {
         this.types = types;
     }
     getId() {
-        return "(" + this.types.map((type) => type.getId()).join("&") + ")";
+        return "(" + this.types.map(type => type.getId()).join("&") + ")";
     }
     getTypes() {
         return this.types;
