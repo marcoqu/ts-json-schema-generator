@@ -24,7 +24,7 @@ class SchemaGenerator {
     }
     getRootNodes(fullName, typeFileName) {
         if (fullName && fullName !== "*") {
-            return [this.findNamedNode(fullName)];
+            return [this.findNamedNode(fullName, typeFileName)];
         }
         else {
             const rootFileNames = this.program.getRootFileNames();
