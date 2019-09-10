@@ -382,7 +382,7 @@
         "signature": "a2cdc28da574fb7015298e535bf0c62f60d9e4bdc62beda977a58dc346b29ba6"
       },
       "../src/schemagenerator.ts": {
-        "version": "291a9c41316106413c140970ba3c604a4e621f0a91162e2cf230b3d1694b6dc3",
+        "version": "c314734eac6d607a20b2efbb5bb365cc3d8f8ea690be830d790d2af0b4a65566",
         "signature": "e824bda327fa0b5db66c8a18156f5cab5eb1401db26fb82cf032e30cee13f389"
       },
       "../src/error/unknowntypeerror.ts": {

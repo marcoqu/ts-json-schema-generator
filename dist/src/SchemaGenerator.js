@@ -41,7 +41,7 @@ class SchemaGenerator {
         const allTypes = new Map();
         let { projectFiles, externalFiles } = this.partitionFiles();
         projectFiles = projectFiles.filter(sourceFile => {
-            typeFileName ? this.isSameFile(sourceFile.fileName, typeFileName) : true;
+            return typeFileName ? this.isSameFile(sourceFile.fileName, typeFileName) : true;
         });
         this.appendTypes(projectFiles, typeChecker, allTypes);
         if (allTypes.has(fullName)) {
