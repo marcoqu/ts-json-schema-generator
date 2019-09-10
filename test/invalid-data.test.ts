@@ -11,7 +11,6 @@ function assertSchema(name: string, type: string, message: string) {
         const config: Config = {
             path: resolve(`test/invalid-data/${name}/*.ts`),
             type: type,
-
             expose: "export",
             topRef: true,
             jsDoc: "none",
@@ -22,7 +21,7 @@ function assertSchema(name: string, type: string, message: string) {
         const generator: SchemaGenerator = new SchemaGenerator(
             program,
             createParser(program, config),
-            createFormatter(config),
+            createFormatter()
         );
 
         expect(() => generator.createSchema(type)).toThrowError(message);
@@ -36,5 +35,5 @@ describe("invalid-data", () => {
     it("literal-index-type", assertSchema("literal-index-type", "MyType", `Unknown node " ["abc", "def"]`));
     it("literal-array-type", assertSchema("literal-array-type", "MyType", `Unknown node " ["abc", "def"]`));
     it("literal-object-type", assertSchema("literal-object-type", "MyType", `Unknown node " {abc: "def"}`));
-    it("duplicates", assertSchema("duplicates", "MyType", `Type \"A\" has multiple definitions.`));
+    it("duplicates", assertSchema("duplicates", "MyType", `Type "A" has multiple definitions.`));
 });

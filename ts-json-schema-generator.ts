@@ -6,37 +6,21 @@ import { BaseError } from "./src/Error/BaseError";
 import { formatError } from "./src/Utils/formatError";
 
 const args = commander
-    .option("-p, --path <path>", "Typescript path")
+    .option("-p, --path <path>", "Source file path")
     .option("-t, --type <name>", "Type name")
+    .option("-f, --tsconfig <path>", "Custom tsconfig.json path")
+    .option("-e, --expose <expose>", "Type exposing", /^(all|none|export)$/, "export")
+    .option("-r, --no-top-ref", "Do not create a top-level $ref definition")
+    .option("-j, --jsDoc <extended>", "Read JsDoc annotations", /^(none|basic|extended)$/, "extended")
+    .option("-u, --unstable", "Do not sort properties")
+    .option("-s, --strict-tuples", "Do not allow additional items on tuples")
+    .option("-c, --no-type-check", "Skip type checks to improve performance")
     .option("-f, --typeFile <typeFile>", "Name of the file containing the type")
-    .option(
-        "-e, --expose <expose>",
-        "Type exposing",
-        /^(all|none|export)$/,
-        "export",
-    )
-    .option(
-        "-j, --jsDoc <extended>",
-        "Read JsDoc annotations",
-        /^(extended|none|basic)$/,
-        "extended",
-    )
-    .option(
-        "-r, --no-top-ref",
-        "Do not create a top-level $ref definition",
-    )
-    .option(
-        "-u, --unstable",
-        "Do not sort properties",
-    )
-    .option(
-        "-c, --no-type-check",
-        "Skip type checks to improve performance",
-    )
     .option(
         "-k, --validationKeywords [value]",
         "Provide additional validation keywords to include",
-        (value: string, list: string[]) => list.concat(value), [],
+        (value: string, list: string[]) => list.concat(value),
+        []
     )
 
     .parse(process.argv);
@@ -44,6 +28,7 @@ const args = commander
 const config: Config = {
     ...DEFAULT_CONFIG,
     path: args.path,
+    tsconfig: args.tsconfig,
     type: args.type,
     expose: args.expose,
     topRef: args.topRef,
@@ -51,14 +36,12 @@ const config: Config = {
     sortProps: !args.unstable,
     typeFile: args.typeFile,
     skipTypeCheck: !args.typeCheck,
-    extraJsonTags: args.validationKeywords,
+    extraJsonTags: args.validationKeywords
 };
 
 try {
     const schema = createGenerator(config).createSchema(args.type, args.typeFile);
-    process.stdout.write(config.sortProps ?
-        stringify(schema, {space: 2}) :
-        JSON.stringify(schema, null, 2));
+    process.stdout.write(config.sortProps ? stringify(schema, { space: 2 }) : JSON.stringify(schema, null, 2));
 } catch (error) {
     if (error instanceof BaseError) {
         process.stderr.write(formatError(error));

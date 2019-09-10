@@ -10,6 +10,11 @@ export class BasicAnnotationsReader implements AnnotationsReader {
 
         "format",
         "pattern",
+
+        // New since draft-07:
+        "$comment",
+        "contentMediaType",
+        "contentEncoding",
     ];
     private static jsonTags: string[] = [
         "minimum",
@@ -23,6 +28,9 @@ export class BasicAnnotationsReader implements AnnotationsReader {
         "minLength",
         "maxLength",
 
+        "minProperties",
+        "maxProperties",
+
         "minItems",
         "maxItems",
         "uniqueItems",
@@ -33,10 +41,16 @@ export class BasicAnnotationsReader implements AnnotationsReader {
         "examples",
 
         "default",
+
+        // New since draft-07:
+        "if",
+        "then",
+        "else",
+        "readOnly",
+        "writeOnly",
     ];
 
-    constructor(private extraJsonTags?: string[]) { }
-
+    public constructor(private extraJsonTags?: string[]) {}
 
     public getAnnotations(node: ts.Node): Annotations | undefined {
         const symbol = symbolAtNode(node);
